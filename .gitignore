@@ -1,6 +1,7 @@
 # Directory
 .idea/
+res/*
 
 # Files
 .env
-res/*
+*.exe
