@@ -12,6 +12,7 @@ type ServiceConfig struct {
 	DatabaseType       db.DBType   `json:"databaseType,omitempty"`
 	DatabaseConnection string      `json:"databaseConnection,omitempty"`
 	Endpoint           string      `json:"endpoint,omitempty"`
+	AMQPMessageBroker  string      `json:"amqp_message_broker"`
 	HttpsConfig        HttpsConfig `json:"httpsConfig,omitempty"`
 }
 
@@ -39,7 +40,7 @@ func LoadConfiguration(filepath_ string) (ServiceConfig, error) {
 		return config, err
 	}
 
-	// Check empty configuration
+	// Check empty configuration and set from environment
 	if len(config.DatabaseConnection) == 0 {
 		config.DatabaseConnection = os.Getenv("MONGODB_URI")
 	}
@@ -48,6 +49,9 @@ func LoadConfiguration(filepath_ string) (ServiceConfig, error) {
 	}
 	if len(config.Endpoint) == 0 {
 		config.Endpoint = os.Getenv("IP_ADDRESS") + ":" + os.Getenv("PORT")
+	}
+	if len(config.AMQPMessageBroker) == 0 {
+		config.AMQPMessageBroker = os.Getenv("RABBITMQ_URI")
 	}
 
 	return config, err

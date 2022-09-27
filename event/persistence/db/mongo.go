@@ -74,7 +74,7 @@ func (m *MongoDBService) FindOneEvent(filter_ any) (*model.Event, error) {
 	defer cancel()
 
 	// Creating session
-	session := util.GetReturn(m.client.StartSession())
+	session := util.PackReturn(m.client.StartSession())
 	defer session.EndSession(ctx)
 
 	//util.LogError(session.StartTransaction())
@@ -108,7 +108,7 @@ func (m *MongoDBService) FindAllEvents() ([]model.Event, error) {
 	defer cancel()
 
 	// Creating session
-	session := util.GetReturn(m.client.StartSession())
+	session := util.PackReturn(m.client.StartSession())
 	defer session.EndSession(ctx)
 
 	//util.LogError(session.StartTransaction())
@@ -139,7 +139,7 @@ func (m *MongoDBService) FindAllAvailableEvents() ([]model.Event, error) {
 	defer cancel()
 
 	// Creating session
-	session := util.GetReturn(m.client.StartSession())
+	session := util.PackReturn(m.client.StartSession())
 	defer session.EndSession(ctx)
 
 	//util.LogError(session.StartTransaction())

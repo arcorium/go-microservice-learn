@@ -4,13 +4,14 @@ import (
 	"Microservices/event/config"
 	"Microservices/event/persistence/db"
 	"Microservices/event/util"
+	"Microservices/lib/queue"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
 )
 
-func CreateRouter(service db.DatabaseService) *mux.Router {
-	handler := NewEventServiceHandler(service)
+func CreateRouter(service db.DatabaseService, emitter_ queue.EventEmitter) *mux.Router {
+	handler := NewEventServiceHandler(service, emitter_)
 
 	router := mux.NewRouter().StrictSlash(false)
 	eventRouter := router.PathPrefix("/events").Subrouter()
@@ -21,13 +22,14 @@ func CreateRouter(service db.DatabaseService) *mux.Router {
 	return router
 }
 
-func ServeAPI(config_ *config.ServiceConfig, service db.DatabaseService) <-chan error {
-	router := CreateRouter(service)
+func serve(config_ *config.ServiceConfig, service db.DatabaseService, emitter_ queue.EventEmitter) <-chan error {
+	router := CreateRouter(service, emitter_)
 	router.Path("/").Methods(http.MethodGet).HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
-		util.GetReturn(writer.Write([]byte("Index")))
+		util.PackReturn(writer.Write([]byte("Index")))
 	})
 
 	log.Println("Server listening to", config_.Endpoint)
+	log.Println("Broker connected to", config_.AMQPMessageBroker)
 
 	// Channel for handling returned error
 	httpErrorChan := make(chan error)
@@ -37,10 +39,10 @@ func ServeAPI(config_ *config.ServiceConfig, service db.DatabaseService) <-chan 
 	return httpErrorChan
 }
 
-func TLSServeAPI(config_ *config.HttpsConfig, service db.DatabaseService) <-chan error {
-	router := CreateRouter(service)
+func serveTLS(config_ *config.HttpsConfig, service db.DatabaseService, emitter_ queue.EventEmitter) <-chan error {
+	router := CreateRouter(service, emitter_)
 	router.Path("/").Methods(http.MethodGet).HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
-		util.GetReturn(writer.Write([]byte("Index TLS")))
+		util.PackReturn(writer.Write([]byte("Index TLS")))
 	})
 
 	log.Println("TLS Server listening to", config_.Endpoint)
@@ -53,4 +55,16 @@ func TLSServeAPI(config_ *config.HttpsConfig, service db.DatabaseService) <-chan
 	}(httpsErrorChan, router)
 
 	return httpsErrorChan
+}
+
+func ServeAPI(config_ *config.ServiceConfig, service db.DatabaseService, emitter_ queue.EventEmitter) []<-chan error {
+	httpChan := serve(config_, service, emitter_)
+
+	// Serve for https
+	if config_.Https {
+		httpsChan := serveTLS(&config_.HttpsConfig, service, emitter_)
+		return []<-chan error{httpsChan, httpChan}
+	}
+
+	return []<-chan error{httpChan}
 }
