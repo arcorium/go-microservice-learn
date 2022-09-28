@@ -1,7 +1,10 @@
 # Directory
 .idea/
-res/*
+res/
 
 # Files
 .env
 .exe
+.http
+
+lib/
