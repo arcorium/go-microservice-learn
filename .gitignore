@@ -3,8 +3,6 @@
 res/
 
 # Files
-.env
-.exe
-.http
-
-lib/
+*.env
+*.exe
+*.http
