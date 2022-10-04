@@ -24,7 +24,7 @@ func (a *amqpEventListener) setup() error {
 		util.LogError(channel_.Close())
 	}(channel)
 
-	// Declaring queue for this services
+	// Declaring queue for this service
 	_, err = channel.QueueDeclare(a.queue, true,
 		false, false, false, nil)
 
@@ -53,7 +53,7 @@ func (a *amqpEventListener) Listen(event ...string) (<-chan queue.Event, <-chan 
 	eventChannel := make(chan queue.Event)
 	errorChannel := make(chan error)
 
-	// Run asynchronous for receiving delivery and convert into Event
+	// Run asynchronous for receiving 'delivery' and convert into Event
 	go func() {
 		// Defer in goroutine because it will run forever to convert Delivery to Event type
 		defer func(channel_ *amqp.Channel) {

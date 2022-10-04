@@ -1,7 +1,7 @@
 package db
 
 import (
-	"Microservices/services/event/model"
+	"Microservices/service/event/model"
 	"errors"
 	"log"
 )

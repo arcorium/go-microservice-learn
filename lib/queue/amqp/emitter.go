@@ -59,7 +59,7 @@ func (a amqpEventEmitter) Emit(event_ queue.Event) error {
 
 	// Publish
 	// mandatory: the message will publish into at least one queue
-	// immediate: the message will publish into at least one services
+	// immediate: the message will publish into at least one service
 	// key will be used to route
 	return channel.PublishWithContext(ctx, "events",
 		event_.EventName(), false, false, msg)

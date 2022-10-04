@@ -5,7 +5,7 @@ import (
 	"Microservices/lib/persistence/db"
 	"Microservices/lib/queue/amqp"
 	"Microservices/lib/util"
-	"Microservices/services/event/rest"
+	"Microservices/service/event/rest"
 	"flag"
 	_ "github.com/joho/godotenv/autoload"
 	"log"

@@ -1,7 +1,7 @@
 package model
 
 import (
-	"Microservices/services/event/model"
+	"Microservices/service/event/model"
 )
 
 type LocationCreateEvent struct {

@@ -5,7 +5,7 @@ import (
 	"Microservices/lib/persistence/db"
 	"Microservices/lib/queue"
 	"Microservices/lib/util"
-	"Microservices/services/event/model"
+	"Microservices/service/event/model"
 	"encoding/json"
 	"github.com/gorilla/mux"
 	"log"

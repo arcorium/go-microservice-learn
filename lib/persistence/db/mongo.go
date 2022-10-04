@@ -2,7 +2,7 @@ package db
 
 import (
 	"Microservices/lib/util"
-	"Microservices/services/event/model"
+	"Microservices/service/event/model"
 	"context"
 	"errors"
 	"go.mongodb.org/mongo-driver/bson"
@@ -21,7 +21,7 @@ func newMongoDBService(connection_ string) (*MongoDBService, error) {
 	if client, err := mongo.Connect(context.Background(), options.Client().ApplyURI(connection_)); err == nil {
 		return &MongoDBService{client: client}, nil
 	} else {
-		return nil, err
+		return &MongoDBService{client: nil}, err
 	}
 }
 
@@ -167,4 +167,16 @@ func (m *MongoDBService) FindAllAvailableEvents() ([]model.Event, error) {
 		err = cursor.All(ctx, events)
 		return events, err
 	}
+}
+
+func (m *MongoDBService) FindLocationById(any) (*model.Location, error) {
+	return nil, nil
+}
+
+func (m *MongoDBService) FindLocationByName(string) (*model.Location, error) {
+	return nil, nil
+}
+
+func (m *MongoDBService) FindAllLocations() ([]model.Location, error) {
+	return nil, nil
 }
